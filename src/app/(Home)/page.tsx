@@ -1,47 +1,67 @@
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import ProductCard, { Product } from "./components/ProductCard";
+import { Category } from "@/lib/types";
 
 const products: Product[] = [
   {
     id: "1",
     name: "Margherita Pizza",
-    description: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
+    description:
+      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
     image: "/pizza-main.png",
     price: 200,
   },
   {
     id: "2",
     name: "main Pizza",
-    description: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
+    description:
+      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
     image: "/pizza-main.png",
     price: 200,
   },
   {
     id: "3",
     name: "main Pizza",
-    description: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
+    description:
+      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
     image: "/pizza-main.png",
     price: 200,
   },
   {
     id: "4",
     name: "main Pizza",
-    description: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
+    description:
+      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
     image: "/pizza-main.png",
     price: 200,
   },
   {
     id: "5",
     name: "main Pizza",
-    description: "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
+    description:
+      "Classic pizza with fresh tomatoes, mozzarella cheese, and basil.",
     image: "/pizza-main.png",
     price: 200,
-  }
-]
+  },
+];
 
-export default function Home() {
+export default async function Home() {
+  const categoryResponse = await fetch(
+    `${process.env.BACKEND_URL}/api/catalog/categories`,
+    {
+      next: {
+        revalidate: 3600, // 1 hour
+      },
+    }
+  );
+
+  if (!categoryResponse.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
+  const categories: Category[] = await categoryResponse.json();
   return (
     <>
       <section className="bg-white ">
@@ -59,28 +79,53 @@ export default function Home() {
             </Button>
           </div>
           <div>
-            <Image alt="pizza-main" src={'/pizza-main.png'} width={400} height={400} />
+            <Image
+              alt="pizza-main"
+              src={"/pizza-main.png"}
+              width={400}
+              height={400}
+            />
           </div>
         </div>
       </section>
       <section>
         <div className="container px-12 mx-auto py-12">
-          <Tabs defaultValue="pizza" className="w-full">
+          <Tabs
+            defaultValue="pizza"
+            className="w-full"
+          >
             <TabsList>
-              <TabsTrigger value="pizza" className="text-md">
+              <TabsTrigger
+                value="pizza"
+                className="text-md"
+              >
                 Pizza
               </TabsTrigger>
-              <TabsTrigger value="beverages" className="text-md">
-                Beverages
+              <TabsTrigger
+                value="beverages"
+                className="text-md"
+              >
+                {categories.map((category) => {
+                  return (
+                    <TabsTrigger
+                      key={category._id}
+                      value={category._id}
+                      className="text-md"
+                    >
+                      {category.name}
+                    </TabsTrigger>
+                  );
+                })}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="pizza">
               <div className="grid grid-cols-4 gap-6 mt-6">
-                {
-                  products.map((product: Product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))
-                }
+                {products.map((product: Product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                  />
+                ))}
               </div>
             </TabsContent>
             <TabsContent value="beverages">Beverages list </TabsContent>

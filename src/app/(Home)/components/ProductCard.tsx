@@ -18,7 +18,7 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
+import ToppingList from "./ToppingList";
 export type Product = {
   id?: string;
   name: string;
@@ -53,7 +53,10 @@ const ProductCard = ({ product }: PropTypes) => {
           <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
             Choose
           </DialogTrigger>
-          <DialogContent className="max-w-5xl p-0">
+          <VisuallyHidden>
+            <DialogTitle>ok</DialogTitle>
+          </VisuallyHidden>
+          <DialogContent className="max-w-5xl p-0 mx-4 my-4 max-h-[90vh] overflow-auto ">
             <div className="flex">
               <div className="w-1/3 bg-white rounded p-8 flex items-center justify-center">
                 <Image
@@ -157,6 +160,8 @@ const ProductCard = ({ product }: PropTypes) => {
                     </div>
                   </RadioGroup>
                 </div>
+
+                <ToppingList />
               </div>
             </div>
           </DialogContent>

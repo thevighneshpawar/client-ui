@@ -20,13 +20,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ToppingList from "./ToppingList";
 import { ShoppingCart } from "lucide-react";
-export type Product = {
-  id?: string;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-};
+import { Product } from "@/lib/types";
+
 type PropTypes = { product: Product };
 
 const ProductCard = ({ product }: PropTypes) => {

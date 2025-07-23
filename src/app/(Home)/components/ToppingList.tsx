@@ -1,47 +1,36 @@
-"use client";
-import React, { useState } from "react";
-import ToppingCard, { Topping } from "./ToppingCard";
-
-const toppings = [
-  {
-    id: "1",
-    name: "Chicken",
-    image: "/chicken.png",
-    price: 50,
-    isAvailable: true,
-  },
-  {
-    id: "2",
-    name: "jelapeno",
-    image: "/Jelapeno.png",
-    price: 50,
-    isAvailable: true,
-  },
-  {
-    id: "3",
-    name: "Cheese",
-    image: "/cheese.png",
-    price: 50,
-    isAvailable: true,
-  },
-];
+import React, { useState, useEffect } from "react";
+import ToppingCard from "./ToppingCard";
+import { Topping } from "@/lib/types";
 
 const ToppingList = () => {
-  const [selectedToppings, setSelectedToppings] = useState([toppings[0]]);
+  const [toppings, setToppings] = useState<Topping[]>([]);
+  const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const toppingResponse = await fetch(
+        // todo: make tenantId dynamic
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=1`
+      );
+      const toppings = await toppingResponse.json();
+      setToppings(toppings.data.data);
+      console.log("toppings", toppings);
+    };
+    fetchData();
+  }, []);
 
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
-      (element) => element.id === topping.id
+      (element: Topping) => element._id === topping._id
     );
 
     if (isAlreadyExists) {
       setSelectedToppings((prev) =>
-        prev.filter((elm) => elm.id !== topping.id)
+        prev.filter((elm: Topping) => elm._id !== topping._id)
       );
       return;
     }
 
-    setSelectedToppings((prev) => [...prev, topping]);
+    setSelectedToppings((prev: Topping[]) => [...prev, topping]);
   };
 
   return (
@@ -52,7 +41,7 @@ const ToppingList = () => {
           return (
             <ToppingCard
               topping={topping}
-              key={topping.id}
+              key={topping._id}
               selectedToppings={selectedToppings}
               handleCheckBoxCheck={handleCheckBoxCheck}
             />

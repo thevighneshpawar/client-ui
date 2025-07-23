@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,10 @@ import { ShoppingCart } from "lucide-react";
 import { Product } from "@/lib/types";
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const handleAddToCart = () => {
+    // todo: add to cart logic
+    console.log("adding to the cart....");
+  };
   return (
     <Dialog>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -75,7 +80,7 @@ const ProductModal = ({ product }: { product: Product }) => {
 
             <div className="flex mt-6 items-center justify-between">
               <span className="font-bold">₹400</span>
-              <Button>
+              <Button onClick={handleAddToCart}>
                 {" "}
                 <ShoppingCart /> <span>Add to Cart</span>
               </Button>

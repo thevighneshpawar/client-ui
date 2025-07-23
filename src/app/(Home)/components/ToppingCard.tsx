@@ -4,14 +4,8 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
+import { Topping } from "@/lib/types";
 
-export type Topping = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  isAvailable: boolean;
-};
 type PropType = {
   topping: Topping;
   selectedToppings: Topping[];
@@ -23,7 +17,7 @@ const ToppingCard = ({
   handleCheckBoxCheck,
 }: PropType) => {
   const isCurrentSelected = selectedToppings.some(
-    (element) => element.id === topping.id
+    (element) => element._id === topping._id
   );
 
   return (

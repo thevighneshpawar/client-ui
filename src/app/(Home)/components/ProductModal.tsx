@@ -8,7 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import ToppingList from "./ToppingList";
 import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -76,7 +76,9 @@ const ProductModal = ({ product }: { product: Product }) => {
               }
             )}
 
-            <ToppingList />
+            <Suspense fallback={"Toppings loading..."}>
+              <ToppingList />
+            </Suspense>
 
             <div className="flex mt-6 items-center justify-between">
               <span className="font-bold">₹400</span>

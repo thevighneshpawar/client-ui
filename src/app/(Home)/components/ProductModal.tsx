@@ -8,18 +8,41 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React, { Suspense } from "react";
+import React, { startTransition, Suspense, useState } from "react";
 import ToppingList from "./ToppingList";
 import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ShoppingCart } from "lucide-react";
 import { Product } from "@/lib/types";
 
+type ChosenConfig = {
+  [key: string]: string;
+};
 const ProductModal = ({ product }: { product: Product }) => {
+  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+
   const handleAddToCart = () => {
     // todo: add to cart logic
     console.log("adding to the cart....");
   };
+
+  const handleRadioChange = (key: string, data: string) => {
+    /**
+      {
+        Size: "Medium",
+        Crust: "Thin"
+    }
+     */
+
+    startTransition(() => {
+      setChosenConfig((prev) => {
+        return { ...prev, [key]: data };
+      });
+
+      console.log(chosenConfig);
+    });
+  };
+
   return (
     <Dialog>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -49,6 +72,9 @@ const ProductModal = ({ product }: { product: Product }) => {
                   <div key={key}>
                     <h4 className="mt-6">Choose the {key}</h4>
                     <RadioGroup
+                      onValueChange={(data) => {
+                        handleRadioChange(key, data);
+                      }}
                       defaultValue={value.availableOptions[0]}
                       className="grid grid-cols-3 gap-4 mt-2"
                     >

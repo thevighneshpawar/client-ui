@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   /* config options here */
 
   images: {
-    domains: ["res.cloudinary.com"],
     // Alternative newer syntax (recommended):
     remotePatterns: [
       {

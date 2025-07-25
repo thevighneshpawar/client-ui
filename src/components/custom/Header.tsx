@@ -7,10 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Phone, ShoppingBasket } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tenant } from "@/lib/types";
-import CartCounter from "./CartCounter";
+import CartCounterWithoutSSR from "./CartCounterWrapper";
+
+// const CartCounterWithoutSSR = dynamic(() => import("./CartCounter"), {
+//   ssr: false,
+// });
 
 const Header = async () => {
   const tenantsResponse = await fetch(
@@ -94,7 +98,7 @@ const Header = async () => {
             </li>
           </ul>
 
-          <CartCounter />
+          <CartCounterWithoutSSR />
 
           <div className="flex items-center ml-12">
             <Phone />

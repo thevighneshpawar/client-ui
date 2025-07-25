@@ -2,12 +2,10 @@
 import { ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { Button } from "../ui/button";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/hooks";
 //import { increment } from "@/lib/store/features/cartSlice";
 
 const CartCounter = () => {
-  const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
 
   return (

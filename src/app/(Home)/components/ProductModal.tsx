@@ -14,11 +14,14 @@ import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/lib/types";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { addToCart } from "@/lib/store/features/cartSlice";
 
 type ChosenConfig = {
   [key: string]: string;
 };
 const ProductModal = ({ product }: { product: Product }) => {
+  const dispatch = useAppDispatch();
   const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
   const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
 
@@ -39,9 +42,18 @@ const ProductModal = ({ product }: { product: Product }) => {
     });
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (product: Product) => {
     // todo: add to cart logic
     console.log("adding to the cart....");
+    const itemToadd = {
+      product,
+      chosenConfiguration: {
+        priceConfiguration: chosenConfig!,
+        selectedToppings: selectedToppings,
+      },
+    };
+
+    dispatch(addToCart(itemToadd));
   };
 
   const handleRadioChange = (key: string, data: string) => {
@@ -129,7 +141,7 @@ const ProductModal = ({ product }: { product: Product }) => {
 
             <div className="flex mt-6 items-center justify-between">
               <span className="font-bold">₹400</span>
-              <Button onClick={handleAddToCart}>
+              <Button onClick={() => handleAddToCart(product)}>
                 {" "}
                 <ShoppingCart /> <span>Add to Cart</span>
               </Button>

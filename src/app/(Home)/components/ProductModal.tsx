@@ -8,18 +8,36 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React, { startTransition, Suspense, useState } from "react";
+import React, { startTransition, Suspense, useEffect, useState } from "react";
 import ToppingList from "./ToppingList";
 import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ShoppingCart } from "lucide-react";
-import { Product } from "@/lib/types";
+import { Product, Topping } from "@/lib/types";
 
 type ChosenConfig = {
   [key: string]: string;
 };
 const ProductModal = ({ product }: { product: Product }) => {
   const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+  const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
+  const handleCheckBoxCheck = (topping: Topping) => {
+    const isAlreadyExists = selectedToppings.some(
+      (element: Topping) => element._id === topping._id
+    );
+
+    startTransition(() => {
+      if (isAlreadyExists) {
+        setSelectedToppings((prev) =>
+          prev.filter((elm: Topping) => elm._id !== topping._id)
+        );
+        return;
+      }
+
+      setSelectedToppings((prev: Topping[]) => [...prev, topping]);
+    });
+  };
 
   const handleAddToCart = () => {
     // todo: add to cart logic
@@ -103,7 +121,10 @@ const ProductModal = ({ product }: { product: Product }) => {
             )}
 
             <Suspense fallback={"Toppings loading..."}>
-              <ToppingList />
+              <ToppingList
+                selectedToppings={selectedToppings}
+                handleCheckBoxCheck={handleCheckBoxCheck}
+              />
             </Suspense>
 
             <div className="flex mt-6 items-center justify-between">

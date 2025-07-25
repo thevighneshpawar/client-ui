@@ -8,17 +8,15 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 
 const CartCounter = () => {
   const dispatch = useAppDispatch();
-  // const value = useAppSelector((state) => state.cart.value);
-  // const handleOnclick = () => {
-  //   dispatch(increment());
-  // };
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
+
   return (
     <div className="relative">
       <Link href="/cart">
         <ShoppingBasket className="hover:text-primary" />
       </Link>
       <span className="absolute -top-4 -right-5 h-6 w-6 flex items-center justify-center rounded-full bg-primary font-bold text-white">
-        1
+        {cartItems.length}
       </span>
       {/* <Button onClick={handleOnclick}>Increment</Button> */}
     </div>

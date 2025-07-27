@@ -22,6 +22,7 @@ type ChosenConfig = {
 };
 const ProductModal = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
+
   const defaultConfiguration = Object.entries(
     product.category.priceConfiguration
   )
@@ -83,6 +84,22 @@ const ProductModal = ({ product }: { product: Product }) => {
     });
   };
 
+  const totalPrice = React.useMemo(() => {
+    const toppingPrice = selectedToppings.reduce(
+      (acc, topping) => acc + topping.price,
+      0
+    );
+
+    const configPricing = Object.entries(chosenConfig).reduce(
+      (acc, [key, value]: [string, string]) => {
+        const price = product.priceConfiguration[key].availableOptions[value];
+        return acc + price;
+      },
+      0
+    );
+    return configPricing + toppingPrice;
+  }, [chosenConfig, selectedToppings]);
+
   return (
     <Dialog>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -142,15 +159,17 @@ const ProductModal = ({ product }: { product: Product }) => {
               }
             )}
 
-            <Suspense fallback={"Toppings loading..."}>
-              <ToppingList
-                selectedToppings={selectedToppings}
-                handleCheckBoxCheck={handleCheckBoxCheck}
-              />
-            </Suspense>
+            {product.category.name === "Pizza" && (
+              <Suspense fallback={"Toppings loading..."}>
+                <ToppingList
+                  selectedToppings={selectedToppings}
+                  handleCheckBoxCheck={handleCheckBoxCheck}
+                />
+              </Suspense>
+            )}
 
             <div className="flex mt-6 items-center justify-between">
-              <span className="font-bold">₹400</span>
+              <span className="font-bold">₹{totalPrice}</span>
               <Button onClick={() => handleAddToCart(product)}>
                 {" "}
                 <ShoppingCart /> <span>Add to Cart</span>

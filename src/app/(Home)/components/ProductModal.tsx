@@ -14,14 +14,16 @@ import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/lib/types";
-import { useAppDispatch } from "@/lib/store/hooks";
-import { addToCart } from "@/lib/store/features/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { addToCart, CartItem } from "@/lib/store/features/cartSlice";
+import { hashTheItem } from "@/lib/utils";
 
 type ChosenConfig = {
   [key: string]: string;
 };
 const ProductModal = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
 
   const defaultConfiguration = Object.entries(
     product.category.priceConfiguration
@@ -35,6 +37,23 @@ const ProductModal = ({ product }: { product: Product }) => {
     defaultConfiguration as unknown as ChosenConfig
   );
   const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
+  const alreadyHasInCart = React.useMemo(() => {
+    const currentConfiguration = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      priceConfiguration: product.priceConfiguration,
+      chosenConfiguration: {
+        priceConfiguration: { ...chosenConfig },
+        selectedToppings: selectedToppings,
+      },
+      qty: 1,
+    };
+
+    const hash = hashTheItem(currentConfiguration);
+    return cartItems.some((item) => item.hash === hash);
+  }, [product, chosenConfig, selectedToppings, cartItems]);
 
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
@@ -56,15 +75,18 @@ const ProductModal = ({ product }: { product: Product }) => {
   const handleAddToCart = (product: Product) => {
     // todo: add to cart logic
     console.log("adding to the cart....");
-    const itemToadd = {
-      product,
+    const itemToAdd: CartItem = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      priceConfiguration: product.priceConfiguration,
       chosenConfiguration: {
         priceConfiguration: chosenConfig!,
         selectedToppings: selectedToppings,
       },
+      qty: 1,
     };
-
-    dispatch(addToCart(itemToadd));
+    dispatch(addToCart(itemToAdd));
   };
 
   const handleRadioChange = (key: string, data: string) => {
@@ -170,9 +192,15 @@ const ProductModal = ({ product }: { product: Product }) => {
 
             <div className="flex mt-6 items-center justify-between">
               <span className="font-bold">₹{totalPrice}</span>
-              <Button onClick={() => handleAddToCart(product)}>
-                {" "}
-                <ShoppingCart /> <span>Add to Cart</span>
+              <Button
+                className={alreadyHasInCart ? "bg-gray-700" : "bg-primary"}
+                disabled={alreadyHasInCart}
+                onClick={() => handleAddToCart(product)}
+              >
+                <ShoppingCart size={20} />
+                <span className="ml-2">
+                  {alreadyHasInCart ? "Already in cart" : "Add to cart"}
+                </span>
               </Button>
             </div>
           </div>

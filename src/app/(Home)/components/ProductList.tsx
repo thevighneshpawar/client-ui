@@ -3,7 +3,11 @@ import { Category, Product } from "@/lib/types";
 import React from "react";
 import ProductCard from "./ProductCard";
 
-const ProductList = async () => {
+const ProductList = async ({
+  searchParams,
+}: {
+  searchParams: { restaurantId: string };
+}) => {
   const [categoryResponse, productsResponse] = await Promise.all([
     fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
       next: {
@@ -11,7 +15,7 @@ const ProductList = async () => {
       },
     }),
     fetch(
-      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=1`,
+      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${searchParams.restaurantId}`,
       {
         next: {
           revalidate: 3600, // 1 hour

@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/ProductCard";
-import { Category } from "@/lib/types";
+import { Product } from "./components/ProductCard";
 import { Suspense } from "react";
 import ProductList from "./components/ProductList";
 
@@ -49,7 +47,11 @@ const products: Product[] = [
   },
 ];
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { restaurantId: string };
+}) {
   return (
     <>
       <section className="bg-white ">
@@ -77,7 +79,7 @@ export default async function Home() {
         </div>
       </section>
       <Suspense fallback={"loading........"}>
-        <ProductList />
+        <ProductList searchParams={searchParams} />
       </Suspense>
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, startTransition } from "react";
 import ToppingCard from "./ToppingCard";
 import { Topping } from "@/lib/types";
+import { useSearchParams } from "next/navigation";
 
 const ToppingList = ({
   selectedToppings,
@@ -10,11 +11,13 @@ const ToppingList = ({
   handleCheckBoxCheck: (topping: Topping) => void;
 }) => {
   const [toppings, setToppings] = useState<Topping[]>([]);
-
+  const searchParams = useSearchParams();
   useEffect(() => {
     const fetchData = async () => {
       const toppingResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=1`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=${
+          searchParams.get("restaurantId") as string
+        }`
       );
       const toppings = await toppingResponse.json();
       setToppings(toppings.data.data);

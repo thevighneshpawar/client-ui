@@ -52,10 +52,45 @@ export const cartSlice = createSlice({
     setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
       state.cartItems.push(...action.payload);
     },
+
+    changeQty: (
+      state,
+      action: PayloadAction<{ hash: string; qty: number }>
+    ) => {
+      const index = state.cartItems.findIndex(
+        (item) => item.hash === action.payload.hash
+      );
+
+      if (action.payload.qty === 0) {
+        state.cartItems.splice(index, 1);
+        window.localStorage.setItem(
+          "cartItems",
+          JSON.stringify(state.cartItems)
+        );
+        return;
+      }
+      // 1 , -1
+      // 0 -> 1 = 1
+      // 1 -> -1 1 + -1 = 0
+      state.cartItems[index].qty = Math.max(
+        1,
+        state.cartItems[index].qty + action.payload.qty
+      );
+
+      window.localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    },
+
+    clearCart: () => {
+      window.localStorage.setItem("cartItems", JSON.stringify([]));
+      return {
+        cartItems: [],
+      };
+    },
   },
 });
 
-export const { addToCart, setInitialCartItems } = cartSlice.actions;
+export const { addToCart, setInitialCartItems, changeQty, clearCart } =
+  cartSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 //export const selectCount = (state: RootState) => state.cart.value;

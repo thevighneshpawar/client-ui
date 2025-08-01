@@ -1,23 +1,21 @@
 import Link from "next/link";
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
-import { Tenant } from "@/lib/types";
+
 import CartCounterWithoutSSR from "./CartCounterWrapper";
 import TenantSelect from "./TenantSelect";
+import { getSession } from "@/lib/session";
 
 // const CartCounterWithoutSSR = dynamic(() => import("./CartCounter"), {
 //   ssr: false,
 // });
 
 const Header = async () => {
+  const session = await getSession();
+  console.log("session", session);
+
   const tenantsResponse = await fetch(
     `${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,
     {
@@ -89,7 +87,13 @@ const Header = async () => {
             <Phone />
             <span>+91 9800 098 998</span>
           </div>
-          <Button size={"sm"}>Logout</Button>
+          <Button size={"sm"}>
+            {session?.user ? (
+              <Link href={"/logout"}>Logout</Link>
+            ) : (
+              <Link href={"/login"}>Login</Link>
+            )}
+          </Button>
         </div>
       </nav>
     </header>

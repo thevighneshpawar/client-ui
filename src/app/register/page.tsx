@@ -1,14 +1,13 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import Image from "next/image";
-import React from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import login from "@/lib/actions/login";
 import { LoaderCircle } from "lucide-react";
+import register from "@/lib/actions/register";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -21,7 +20,7 @@ const SubmitButton = () => {
           <span>Please wait</span>
         </div>
       ) : (
-        "Login"
+        "Register"
       )}
     </Button>
   );
@@ -32,8 +31,8 @@ const initialState = {
   message: "",
 };
 
-const Login = () => {
-  const [state, formAction] = useFormState(login, initialState);
+export default function SignUpPage() {
+  const [state, formAction] = useFormState(register, initialState);
 
   if (state.type === "success") {
     window.location.href = "/";
@@ -52,50 +51,61 @@ const Login = () => {
             >
               {state.message}
             </p>
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-bold">Signup</h1>
             <p className="text-balance text-muted-foreground">
-              Enter your email below to login to your account
+              Enter your information to create an account
             </p>
           </div>
           <form action={formAction}>
             <div className="grid gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="first-name">First name</Label>
+                  <Input
+                    id="first-name"
+                    name="firstName"
+                    placeholder="Max"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="last-name">Last name</Label>
+                  <Input
+                    id="last-name"
+                    name="lastName"
+                    placeholder="Robinson"
+                    required
+                  />
+                </div>
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="email"
                   name="email"
+                  type="email"
                   placeholder="m@example.com"
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  required
                 />
               </div>
               <SubmitButton />
             </div>
           </form>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="underline"
             >
-              Sign up
+              Sign in
             </Link>
           </div>
         </div>
@@ -112,6 +122,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

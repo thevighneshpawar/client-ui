@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import CartCounterWithoutSSR from "./CartCounterWrapper";
 import TenantSelect from "./TenantSelect";
 import { getSession } from "@/lib/session";
+import Logout from "./Logout";
 
 // const CartCounterWithoutSSR = dynamic(() => import("./CartCounter"), {
 //   ssr: false,
@@ -87,13 +88,17 @@ const Header = async () => {
             <Phone />
             <span>+91 9800 098 998</span>
           </div>
-          <Button size={"sm"}>
-            {session?.user ? (
-              <Link href={"/logout"}>Logout</Link>
-            ) : (
+
+          {session?.user ? (
+            <Logout />
+          ) : (
+            <Button
+              size={"sm"}
+              asChild
+            >
               <Link href={"/login"}>Login</Link>
-            )}
-          </Button>
+            </Button>
+          )}
         </div>
       </nav>
     </header>

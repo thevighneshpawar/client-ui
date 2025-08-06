@@ -13,6 +13,8 @@ export async function POST() {
     }
   );
 
+  console.log(response);
+
   if (!response.ok) {
     console.log("Refresh failed.");
     return Response.json({ success: false });

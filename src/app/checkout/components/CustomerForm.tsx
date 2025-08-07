@@ -20,9 +20,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCustomer } from "@/lib/http/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Customer } from "@/lib/types";
 
 const CustomerForm = () => {
-  const { data: customer, isLoading } = useQuery({
+  const { data: customer, isLoading } = useQuery<Customer>({
     queryKey: ["customer"],
     queryFn: async () => {
       return await getCustomer().then((res) => res.data);
@@ -108,40 +109,30 @@ const CustomerForm = () => {
                 </div>
 
                 <RadioGroup
-                  defaultValue="option-one"
+                  defaultValue="0"
                   className="grid grid-cols-2 gap-6 mt-2"
                 >
-                  <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="option-one"
-                        id="option-one"
-                      />
-                      <Label
-                        htmlFor="option-one"
-                        className="leading-normal"
+                  {customer?.addresses.map((address, index) => {
+                    return (
+                      <Card
+                        className="p-6"
+                        key={index}
                       >
-                        123, ABC Street, Malad West, Mumbai, Maharashtra, India
-                        400064
-                      </Label>
-                    </div>
-                  </Card>
-
-                  <Card className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="option-two"
-                        id="option-two"
-                      />
-                      <Label
-                        htmlFor="option-two"
-                        className="leading-normal"
-                      >
-                        Flat No. 501, Sunshine Apartments, Andheri East, Mumbai,
-                        Maharashtra, India 400069
-                      </Label>
-                    </div>
-                  </Card>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value={index.toString()}
+                            id={index.toString()}
+                          />
+                          <Label
+                            htmlFor="option-one"
+                            className="leading-normal"
+                          >
+                            {address.text}
+                          </Label>
+                        </div>
+                      </Card>
+                    );
+                  })}
                 </RadioGroup>
               </div>
             </div>

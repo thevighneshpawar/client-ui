@@ -254,11 +254,16 @@ const CustomerForm = () => {
                   className="w-full"
                   placeholder="Coupon code"
                 />
-                <Button variant={"outline"}>Apply</Button>
+                <Button
+                  type="button"
+                  variant={"outline"}
+                >
+                  Apply
+                </Button>
               </div>
 
               <div className="text-right mt-6">
-                <Button>Place order</Button>
+                <Button type="submit">Place order</Button>
               </div>
             </CardContent>
           </Card>

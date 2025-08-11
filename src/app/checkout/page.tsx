@@ -43,7 +43,6 @@ export default async function Checkout({
 
   sParams.append("return-to", `/checkout?${existingQueryString}`);
   if (!session) {
-    console.log(session);
     redirect(`/login?${sParams}`);
   }
   return <CustomerForm />;

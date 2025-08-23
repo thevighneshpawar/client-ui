@@ -23,6 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import OrderSummary from "./OrderSummary";
+import { useSearchParams } from "next/navigation";
+import { useAppSelector } from "@/lib/store/hooks";
 
 const formSchema = z.object({
   address: z.string().nonempty("Please select an address."),
@@ -47,10 +49,28 @@ const CustomerForm = () => {
     <Skeleton className="h-[200px] w-[100px] rounded-full" />;
   }
 
+  const searchParam = useSearchParams();
+
+  const chosenCouponCode = React.useRef("");
+  const cart = useAppSelector((state) => state.cart);
+
   const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
-    console.log("Order Data: ", data);
-    // Here you would typically send the order data to your backend
-    // For example, using a mutation hook to place the order
+    const tenantId = searchParam.get("restaurantId");
+    if (!tenantId) {
+      alert("Restaurant Id is required!");
+      return;
+    }
+    const orderData = {
+      cart: cart.cartItems,
+      couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
+      tenantId: tenantId,
+      customerId: customer?._id,
+      comment: data.comment,
+      address: data.address,
+      paymentMode: data.paymentMode,
+    };
+
+    console.log("Data", orderData);
   };
   return (
     <Form {...customerForm}>
@@ -220,7 +240,11 @@ const CustomerForm = () => {
             </CardContent>
           </Card>
 
-          <OrderSummary />
+          <OrderSummary
+            handleCouponCodeChange={(code) => {
+              chosenCouponCode.current = code;
+            }}
+          />
         </div>
       </form>
     </Form>

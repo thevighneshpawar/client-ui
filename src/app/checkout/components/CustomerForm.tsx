@@ -63,7 +63,19 @@ const CustomerForm = () => {
         ? idempotencyKeyRef.current
         : (idempotencyKeyRef.current = uuidv4() + customer?._id);
 
-      await createOrder(data, idempotencyKey);
+      // Return the result from createOrder
+      const res = await createOrder(data, idempotencyKey);
+      return res.data; // This should be { paymentUrl: string | null }
+    },
+    onSuccess: (data: { paymentUrl: string | null }) => {
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      }
+
+      alert("Order placed successfully!");
+
+      // todo: This will happen if payment mode is Cash.
+      // todo: 1. Clear the cart 2. Redirect the user to order status page.
     },
     retry: 3,
   });

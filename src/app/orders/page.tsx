@@ -21,9 +21,6 @@ import React from "react";
 const Orders = async () => {
   const token = (await cookies()).get("accessToken")?.value;
 
-  console.log("BACKEND_URL:", process.env.BACKEND_URL);
-  console.log("Full URL:", `${process.env.BACKEND_URL}/api/order/orders/mine`);
-  console.log("Token:", token);
   const response = await fetch(
     `${process.env.BACKEND_URL}/api/order/orders/mine`,
     {
@@ -39,7 +36,7 @@ const Orders = async () => {
     throw new Error("Error Fetching my order.");
   }
 
-  const orders = await response.json();
+  const orders = (await response.json()) || [];
   return (
     <div className="container px-12 mx-auto my-6">
       <Card>

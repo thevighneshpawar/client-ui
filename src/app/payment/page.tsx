@@ -11,16 +11,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import CartCleaner from "../checkout/components/CartCleaner";
 
 const Payment = ({
   searchParams,
 }: {
-  searchParams: { success: string; orderId: string; restaurantId: string };
+  searchParams: { success: string; orderId: string; tenantId: string };
 }) => {
   const isOrderSuccess = searchParams.success === "true";
 
   return (
     <>
+      {isOrderSuccess && <CartCleaner />}
       <div className="flex flex-col items-center gap-4 w-full mt-32">
         {isOrderSuccess ? (
           <>
@@ -111,7 +113,7 @@ const Payment = ({
             className="mt-6"
           >
             <Link
-              href={`/checkout?restaurantId=${searchParams.restaurantId}`}
+              href={`/checkout?restaurantId=${searchParams.tenantId}`}
               className="flex items-center gap-2"
             >
               <ArrowLeft
